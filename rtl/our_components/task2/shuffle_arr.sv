@@ -40,12 +40,12 @@ module shuffle_arr
         end 
         else begin
             case(state[4:0]) begin
-                READY: state    <= start ? {si, j, i, 8'b0, i, GET_SI} : state;
-                GET_SI: state   <= {si, j, i, 8'b0, j, READ_SJ}; //q=xx;
-                READ_SJ: state  <= {q, (j + q + secret[((i % 3) * 8) +: 8]), i, 8'b0, (j + q + secret[((i % 3) * 8) +: 8]), WRITE_SJ}; //q=si
-                WRITE_SI: state <= {si, j, i, q, i, WRITE_SI}; //q=sj
-                WRITE_SJ: state <= i >= 255 ? {si, j, i, si, j, DONE}, {si, j, i+1, si, j, GET_SI}; //q=xx
-                DONE: state <= state;
+                READY:      state <= start ? {si, j, i, 8'b0, i, GET_SI} : state;
+                GET_SI:     state <= {si, j, i, 8'b0, j, READ_SJ}; //q=xx;
+                READ_SJ:    state <= {q, (j + q + secret[((i % 3) * 8) +: 8]), i, 8'b0, (j + q + secret[((i % 3) * 8) +: 8]), WRITE_SJ}; //q=si
+                WRITE_SI:   state <= {si, j, i, q, i, WRITE_SI}; //q=sj
+                WRITE_SJ:   state <= (i >= 255) ? {si, j, i, 8'b0, i, DONE}, {si, j, i+1, 8'b0, i + 1, GET_SI}; //q=xx
+                DONE:       state <= state;
             endcase
         end
     end
