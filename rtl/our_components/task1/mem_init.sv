@@ -13,7 +13,7 @@ module mem_init
     input logic         start,
     output logic        finish
 
-    /*Signals should by synchronous*/
+    /*Signals should be synchronous*/
 );
 
     localparam STATE_TOP = DATA_WIDTH + 2 - 1;
