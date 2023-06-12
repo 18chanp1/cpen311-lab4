@@ -2,7 +2,7 @@
 Rewritten version of KSA module in systemverilog instead of VHDL
 */
 
-module KSA 
+module ksa 
 (
     input logic         CLOCK_50,
     input logic [3:0]   KEY,
@@ -56,7 +56,33 @@ module KSA
     logic clk, reset_n;
 
     assign clk = CLOCK_50;
-    assign reset_n = KEY[3];
+    assign reset_n = ~KEY[3];
+
+    /* Instantiate on chip memory*/
+
+    logic [7:0] s_arr_addr, s_arr_data, s_arr_q;
+    logic s_arr_wren;
+    s_memory s_arr
+    (
+        .address(s_arr_addr),
+        .clock(clk),
+        .data(s_arr_data),
+        .wren(s_arr_wren),
+        .q(s_arr_q)
+    );
+
+    /*Initial test of mem_init module*/
+    mem_init ksa_mem_init 
+    (
+        .address(s_arr_addr),
+        .data(s_arr_data),
+        .wren(s_arr_wren),
+        .q(s_arr_q),
+        .clk(clk),
+        .rst(reset_n),
+        .start(~KEY[1]),
+        .finish(LEDR[0])
+    );
 
 endmodule
 
