@@ -1,3 +1,4 @@
+/* A module to initialize the on-chip memory. Each word in memory is set to its address*/
 module mem_init
 #(
     parameter DATA_WIDTH = 8 /* width of data, must be same as address width*/
@@ -5,12 +6,14 @@ module mem_init
 (
     output logic [DATA_WIDTH - 1:0]  address,
     output logic [DATA_WIDTH - 1:0]  data,
-    output logic        wren,
-    input logic         q,
+    output logic        wren,                   /*write enable*/
+    input logic         q,                      /* output of memory, not used*/
     input logic         clk,
     input logic         rst,
     input logic         start,
     output logic        finish
+
+    /*Signals should by synchronous*/
 );
 
     localparam STATE_TOP = DATA_WIDTH + 2 - 1;
@@ -29,8 +32,11 @@ module mem_init
         if(rst) state <= {(DATA_WIDTH + 2){1'b0}};
         else begin 
             case(state[1:0])
+                /*Wait for start signal*/
                 READY: state <= start ? {state[STATE_TOP:2], WRITE} : state;
+                /*Increment and write until top of address space*/
                 WRITE: state <= state[STATE_TOP:2] >= 255 ? {state[STATE_TOP:2], DONE} : {(state[STATE_TOP:2] + 1), WRITE};
+                /*Stop and go to done state*/
                 DONE: state <= state;
             endcase
         end
