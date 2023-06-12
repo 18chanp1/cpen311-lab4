@@ -72,18 +72,82 @@ module ksa
     );
 
     /*Initial test of mem_init module*/
+    logic [7:0] init_addr, init_data, init_q;
+    logic init_wren, init_start, init_finish;
     mem_init ksa_mem_init 
     (
-        .address(s_arr_addr),
-        .data(s_arr_data),
-        .wren(s_arr_wren),
-        .q(s_arr_q),
+        .address(init_addr),
+        .data(init_data),
+        .wren(init_wren),
+        .q(init_q),
         .clk(clk),
         .rst(reset_n),
-        .start(~KEY[1]),
-        .finish(LEDR[0])
+        .start(init_start),
+        .finish(init_finish)
     );
 
+
+
+    /* Test of the shuffle_arr module */
+    logic [7:0] shuffle_addr, shuffle_data, shuffle_q;
+    logic [23:0] shuffle_secret;
+    logic shuffle_wren, shuffle_start, shuffle_finish;
+
+    shuffle_arr ksa_shuffle
+    (
+        .address(shuffle_addr),
+        .data(shuffle_data),
+        .q(shuffle_q),
+        .wren(shuffle_wren),
+        .clk(clk),
+        .rst(reset_n),
+        .start(shuffle_start),
+        .secret(24'h000249),
+        .finish(shuffle_finish)
+    );
+
+	 parameter READY = 4'b0000;
+	 parameter FSM1 = 4'b0010;
+	 parameter BREAK = 4'B0100;
+	 parameter FSM2 = 4'b0001;
+	 parameter DONE = 4'b1000;
+	 logic select;
+	 
+	 logic [3:0] state;
+    assign select = state[0];
+	 assign LEDR[2] = state[2];
+    assign LEDR[3] = state[3];
+	 assign shuffle_start = state[0];
+     assign init_start = state[1];
+	 
+    always_ff @(posedge clk) begin
+        if(reset_n) state <= READY;
+        else begin
+            case(state)
+                READY: state <= ~KEY[0] ? FSM1 : READY;
+                FSM1: state <= init_finish? BREAK : FSM1;
+					 BREAK: state <= ~KEY[1] ? FSM2 : BREAK;
+                FSM2: state <= shuffle_finish ? DONE : FSM2;
+            endcase
+        end
+    end
+
+    always_comb begin
+        if(select) begin
+            s_arr_addr = shuffle_addr;
+            s_arr_data = shuffle_data;
+            s_arr_wren = shuffle_wren;
+            shuffle_q = s_arr_q;
+				init_q = 8'b0;
+        end
+        else begin
+            s_arr_addr = init_addr;
+            s_arr_data = init_data;
+            s_arr_wren = init_wren;
+            init_q = s_arr_q;
+				shuffle_q = 8'b0;
+        end
+    end
 endmodule
 
     

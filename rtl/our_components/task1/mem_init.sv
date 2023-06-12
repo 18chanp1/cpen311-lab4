@@ -6,8 +6,8 @@ module mem_init
 (
     output logic [DATA_WIDTH - 1:0]  address,
     output logic [DATA_WIDTH - 1:0]  data,
+    input logic [DATA_WIDTH - 1:0]   q,         /* output of memory, not used*/
     output logic        wren,                   /*write enable*/
-    input logic         q,                      /* output of memory, not used*/
     input logic         clk,
     input logic         rst,
     input logic         start,
