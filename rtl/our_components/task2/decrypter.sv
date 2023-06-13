@@ -49,7 +49,6 @@ module decrypter
     parameter LOAD_SJ = 7'b0011_000;
     parameter WRITE_SI_TO_SJ = 7'b0100_100;
     parameter WRITE_SJ_TO_SI = 7'b0101_100;
-    parameter WAIT_WRITE = 7'b1010_000;
     parameter GET_F_ENCR = 7'b0110_000;
     parameter COMPUTE_DECRYPT = 7'b0111_000; /*Forwarding opportunity*/
     parameter WRITEOUT = 7'b1000_010;
@@ -103,12 +102,6 @@ module decrypter
                     state[6:0] <= WRITE_SJ_TO_SI;
                 end
                 WRITE_SJ_TO_SI: //s_q = xx;
-                begin
-                    si <= sj;
-                    sj <= si;
-                    state[6:0] <= WAIT_WRITE;
-                end
-                WAIT_WRITE: //s = xx;
                 begin
                     state[38:31] <= si + sj; //s_addr = si + sj;
                     state[14:7] <= k;        //msg_addr = k;
