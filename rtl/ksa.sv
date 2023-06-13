@@ -71,6 +71,27 @@ module ksa
         .q(s_arr_q)
     );
 
+    /*Instantiate ROM*/
+    logic [7:0] rom_addr, rom_q;
+    msg rom
+    (
+        .clk(clk),
+        .address(rom_addr),
+        .q(rom_q)
+    );
+
+    /*Instantiate output RAM*/
+    logic [7:0] result_addr, result_data, result_q;
+    logic result_wren
+    decrypted result
+    (
+        .address(result_addr),
+        .clk(clk),
+        .data(result_data),
+        .wren(result_wren),
+        .q(result_q)
+    );
+
     /*Initial test of mem_init module*/
     logic [7:0] init_addr, init_data, init_q;
     logic init_wren, init_start, init_finish;
