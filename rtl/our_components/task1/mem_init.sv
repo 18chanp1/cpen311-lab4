@@ -2,6 +2,7 @@
 module mem_init
 #(
     parameter DATA_WIDTH = 8 /* width of data, must be same as address width*/
+    parameter ADDR_MAX = 255;
 )
 (
     output logic [DATA_WIDTH - 1:0]  address,
@@ -35,7 +36,7 @@ module mem_init
                 /*Wait for start signal*/
                 READY: state <= start ? {state[STATE_TOP:2], WRITE} : state;
                 /*Increment and write until top of address space*/
-                WRITE: state <= state[STATE_TOP:2] >= 255 ? {state[STATE_TOP:2], DONE} : {(state[STATE_TOP:2] + 1), WRITE};
+                WRITE: state <= state[STATE_TOP:2] >= ADDR_MAX ? {state[STATE_TOP:2], DONE} : {(state[STATE_TOP:2] + 1), WRITE};
                 /*Stop and go to done state*/
                 DONE: state <= state;
             endcase
