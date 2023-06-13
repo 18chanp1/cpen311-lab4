@@ -21,11 +21,11 @@ module decrypter
     input logic [DATA_WIDTH - 1:0]  s_q,         
     output logic                    s_wren,    
     input logic                     clk,
-    output logic                    start,
+    input logic                    start,
     output logic                    finish
     /* Signals synchronous*/
 );
 
-    
+
 
 
