@@ -8,7 +8,7 @@ module decrypter
     /*Due to optimizations with mod256, DATA_WIDTH is not changeable*/
     parameter DATA_WIDTH = 8,
     parameter ADDR_WIDTH = 8,
-    parameter MESSAGE_LEN = 32; /* in bytes*/
+    parameter MESSAGE_LEN = 32 /* in bytes*/
 )
 (
     input logic [DATA_WIDTH - 1:0] msg_q,           /*ROM message control signal*/
@@ -21,6 +21,7 @@ module decrypter
     input logic [DATA_WIDTH - 1:0]  s_q,         
     output logic                    s_wren,    
     input logic                     clk,
+    input logic                     rst,
     input logic                    start,
     output logic                    finish
     /* Signals synchronous*/
@@ -32,7 +33,7 @@ module decrypter
     assign finish = state[0];
     assign result_wren = state[1];
     assign s_wren = state[2];
-    assign state_ID = state[6:3];
+    /*assign state_ID = state[6:3];*/
     /* variable by param*/
     assign msg_addr = state[14:7];
     assign result_addr = state[22:15];
@@ -48,8 +49,9 @@ module decrypter
     parameter LOAD_SJ = 7'b0011_000;
     parameter WRITE_SI_TO_SJ = 7'b0100_100;
     parameter WRITE_SJ_TO_SI = 7'b0101_100;
+    parameter WAIT_WRITE = 7'b1010_000;
     parameter GET_F_ENCR = 7'b0110_000;
-    parameter COMPUTE_DECRYPT = 7'b0111_000;
+    parameter COMPUTE_DECRYPT = 7'b0111_000; /*Forwarding opportunity*/
     parameter WRITEOUT = 7'b1000_010;
     parameter DONE = 7'b1001_001;
 
@@ -102,6 +104,12 @@ module decrypter
                 end
                 WRITE_SJ_TO_SI: //s_q = xx;
                 begin
+                    si <= sj;
+                    sj <= si;
+                    state[6:0] <= WAIT_WRITE;
+                end
+                WAIT_WRITE: //s = xx;
+                begin
                     state[38:31] <= si + sj; //s_addr = si + sj;
                     state[14:7] <= k;        //msg_addr = k;
                     state[6:0] <= GET_F_ENCR;
@@ -112,16 +120,19 @@ module decrypter
                 end
                 COMPUTE_DECRYPT: //s_q = s[s[i] + s[j]]
                 begin
-                    state[30:23] <= s_q ^ msg_q //result_data
-                    state[22:15] <= k //result_addr
-                    state[6:0] <= WRITEOUT
+                    state[30:23] <= s_q ^ msg_q; //result_data
+                    state[22:15] <= k; //result_addr
+                    state[6:0] <= WRITEOUT;
+					 end
                 WRITEOUT: 
                 begin
                     if(k < (MESSAGE_LEN - 1))
+						  begin
                         i <= i + 1;
                         k <= k + 1;
                         state[38:31] <= i + 1; //s_addr
-                        state[6:0] <= LOAD_SI
+                        state[6:0] <= LOAD_SI;
+						  end
                     else state[6:0] <= DONE;
                 end
             endcase
