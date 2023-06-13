@@ -24,13 +24,13 @@ module shuffle_arr
     /*Signals should by synchronous*/
 );
 
-    logic [DATA_TOP:0] state;
-	logic [ADDR_WIDTH - 1:0] i, j;
-    logic [DATA_WIDTH - 1:0] si;
-
     localparam ADDR_TOP = ADDR_WIDTH + 5 - 1;
     localparam DATA_TOP = ADDR_TOP + DATA_WIDTH;
     localparam SECRET_BYTE_LEN = SECRET_LEN >> 3;
+
+    logic [DATA_TOP:0] state;
+    logic [ADDR_WIDTH - 1:0] i, j;
+    logic [DATA_WIDTH - 1:0] si;
 
     assign finish =     state[0];
     assign wren =       state[1];
