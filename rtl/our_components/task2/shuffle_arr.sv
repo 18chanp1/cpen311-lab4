@@ -18,7 +18,7 @@ module shuffle_arr
 );
 
     logic [44:0] state;
-	 logic [7:0] i, j, si;
+	logic [7:0] i, j, si;
     assign finish =     state[0];
     assign wren =       state[1];
     /*state ID =        state[4:2]*/
