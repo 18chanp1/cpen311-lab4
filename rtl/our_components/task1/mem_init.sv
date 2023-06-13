@@ -1,8 +1,8 @@
 /* A module to initialize the on-chip memory. Each word in memory is set to its address*/
 module mem_init
 #(
-    parameter DATA_WIDTH = 8 /* width of data, must be same as address width*/
-    parameter ADDR_MAX = 255;
+    parameter DATA_WIDTH = 8, /* width of data, must be same as address width*/
+    parameter ADDR_MAX = 255
 )
 (
     output logic [DATA_WIDTH - 1:0]  address,
