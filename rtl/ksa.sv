@@ -58,7 +58,6 @@ module ksa
 
     assign clk = CLOCK_50;
     assign reset_n = ~KEY[3];
-
 endmodule
 
 `default_nettype wire
