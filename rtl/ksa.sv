@@ -124,7 +124,7 @@ module ksa
         .clk(clk),
         .rst(reset_n),
         .start(shuffle_start),
-        .secret(24'h000249),
+        .secret(24'h0003FF),
         .finish(shuffle_finish)
     );
 
