@@ -65,6 +65,8 @@ module tb_shuffle_arr();
             $display("%0h", memory[i]);
         end
 
+        #6;
+
         $stop;
     end
 endmodule

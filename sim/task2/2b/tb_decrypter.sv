@@ -85,6 +85,9 @@ module tb_decrypter();
         start = 1'b1;
 
         wait(finish);
+        #12;
+
+
         $display("%p", enc_out);
 
         for (int i = 0; i < 32; i = i + 1) begin
