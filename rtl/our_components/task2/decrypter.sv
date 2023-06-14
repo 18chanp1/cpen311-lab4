@@ -11,7 +11,7 @@ module decrypter
     parameter MESSAGE_LEN = 32 /* in bytes*/
 )
 (
-    input logic [DATA_WIDTH - 1:0]  msg_q,          /*ROM message control signal*/
+    input logic [DATA_WIDTH - 1:0]  msg_q,          /*ROM encrypted message control signal*/
     output logic [ADDR_WIDTH - 1:0] msg_addr,
     output logic [ADDR_WIDTH - 1:0] result_addr,    /*RAM decrypted message control*/
     output logic [DATA_WIDTH - 1:0] result_data,
