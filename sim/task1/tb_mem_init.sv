@@ -5,7 +5,7 @@ module tb_mem_init();
     logic [7:0]  address;
     logic [7:0]  data;
     logic        wren;                   /*write enable*/
-    logic         q;                      /* output of memory; not used*/
+    logic [7:0]  q;                      /* output of memory; not used*/
     logic         clk;
     logic         rst;
     logic         start;

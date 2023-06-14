@@ -1,20 +1,20 @@
 /* A module to initialize the on-chip memory. Each word in memory is set to its address*/
 module mem_init
 #(
-    parameter DATA_WIDTH = 8 /* width of data, must be same as address width*/
-    parameter ADDR_MAX = 255;
+    parameter DATA_WIDTH = 8, /* width of data, must be same as address width*/
+    parameter ADDR_MAX = 255
 )
 (
     output logic [DATA_WIDTH - 1:0]  address,
     output logic [DATA_WIDTH - 1:0]  data,
+    input logic [DATA_WIDTH - 1:0]   q,         /* output of memory, not used*/
     output logic        wren,                   /*write enable*/
-    input logic         q,                      /* output of memory, not used*/
     input logic         clk,
     input logic         rst,
     input logic         start,
     output logic        finish
 
-    /*Signals should by synchronous*/
+    /*Signals should be synchronous*/
 );
 
     localparam STATE_TOP = DATA_WIDTH + 2 - 1;

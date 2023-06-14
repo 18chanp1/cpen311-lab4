@@ -1,6 +1,7 @@
 /*
 Rewritten version of KSA module in systemverilog instead of VHDL
 */
+`default_nettype none
 
 module ksa 
 (
@@ -57,8 +58,6 @@ module ksa
 
     assign clk = CLOCK_50;
     assign reset_n = ~KEY[3];
-
-
 endmodule
 
-    
+`default_nettype wire
