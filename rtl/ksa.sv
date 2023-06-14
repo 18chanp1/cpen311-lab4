@@ -2,7 +2,7 @@
 Rewritten version of KSA module in systemverilog instead of VHDL
 */
 
-module KSA 
+module ksa 
 (
     input logic         CLOCK_50,
     input logic [3:0]   KEY,
@@ -56,7 +56,8 @@ module KSA
     logic clk, reset_n;
 
     assign clk = CLOCK_50;
-    assign reset_n = KEY[3];
+    assign reset_n = ~KEY[3];
+
 
 endmodule
 
