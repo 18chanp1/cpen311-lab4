@@ -30,8 +30,8 @@ module decrypter
     localparam MSG_ADDR_T =     ADDR_WIDTH + 7 - 1;         //default 14
     localparam RESULT_ADDR_T =  MSG_ADDR_T + ADDR_WIDTH;    //default 22
     localparam RESULT_DATA_T =  RESULT_ADDR_T + DATA_WIDTH; //default 30
-    localparam S_ADDR_T =       RESULT_DATA_T + ADDR_WIDTH  //default 38
-    localparam S_DATA_T =       S_ADDR_T + DATA_WIDTH       //default 46
+    localparam S_ADDR_T =       RESULT_DATA_T + ADDR_WIDTH;  //default 38
+    localparam S_DATA_T =       S_ADDR_T + DATA_WIDTH;       //default 46
 
     logic [S_DATA_T:0] state;
     

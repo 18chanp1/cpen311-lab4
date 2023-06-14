@@ -2,9 +2,9 @@
 
 module tb_decrypter();
 
-    parameter DATA_WIDTH = 8,
-    parameter ADDR_WIDTH = 8,
-    parameter MESSAGE_LEN = 32
+    parameter DATA_WIDTH = 8;
+    parameter ADDR_WIDTH = 8;
+    parameter MESSAGE_LEN = 32;
     
     logic [DATA_WIDTH - 1:0]  msg_q;          /*ROM encrypted message control signal*/
     logic [ADDR_WIDTH - 1:0] msg_addr;
@@ -46,63 +46,53 @@ module tb_decrypter();
         end
     end
 
-    $readmemh("encrypted_msg.mem", e_msg);
+    logic [7:0] e_msg [32];
 
-    logic [7:0] rom_reg;
     always_ff @(posedge clk) begin
-        msg_q <= rom_reg;
-        rom_reg <= e_msg[msg_addr];
+        msg_q <= e_msg[msg_addr];
     end
 
-    logic [7:0] enc_out [256];
+    logic [7:0] enc_out [32];
     always_ff @(posedge clk) 
     begin
-        if(rst) begin
-            for (int i = 0; i < 256; i = i + 1)
-            begin
-                enc_out <= 'b0;
-            end
-            result_q <= 'b0;
-        end
-        else if (result_wren) 
+        if (result_wren) 
         begin
-            enc_out[address] <= result_data;
-            result_q <= result_data;
+            enc_out[result_addr] <= result_data;
         end
-        else result_q <= enc_out[address];
     end
 
     logic [7:0] scratch [256];
-    $readmemh("swapped.mem", swapped);
     always_ff @(posedge clk)
     begin
-        if(rst) begin
-            for (int i = 0; i < 256; i = i + 1)
-            begin
-                scratch[i] <= swapped[i];
-            end
-            s_q <= swapped[s_addr];
-        end
-        else if (s_wren) 
+        if (s_wren) 
         begin
             s_q <= s_data;
-            scratch[i] <= s_data;
+            scratch[s_addr] <= s_data;
         end
-        else s_q <= scratch[i];
+        else s_q <= scratch[s_addr];
     end
 
 
     initial begin 
+        $readmemh("encrypted_msg.mem", e_msg);
+        $readmemh("swapped.mem", scratch);
         rst = 1'b1;
         start = 1'b0;
 
         #2;
 
+        rst = 1'b0;
         start = 1'b1;
 
         wait(finish);
+        $display("%p", enc_out);
 
-        $display("%s", enc_out);
+        for (int i = 0; i < 32; i = i + 1) begin
+            $write("%c", enc_out[i]);
+        end
+        $display("");
+
+        $stop;
     end
 
 endmodule
