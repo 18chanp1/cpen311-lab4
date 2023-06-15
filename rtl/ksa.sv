@@ -59,7 +59,7 @@ module ksa
     logic clk, reset_n;
 
     assign clk = CLOCK_50;
-    assign reset_n = ~KEY[3];
+    assign reset_n = ~KEY[3]; // Active Low Reset Button on FPGA
 	 
 	 
 	 /* TASK 1: Instantiate on-chip memory: s_memory module */
@@ -104,20 +104,7 @@ module ksa
 									.finish(init_finish));
 	 
 	 
-	 /* TASK 2: Shuffle array based on secret key: shuffle_arr module in shuffle_arr.sv */
-	 logic [7:0] shuffle_addr, shuffle_data;
-    logic [23:0] shuffle_secret;
-    logic shuffle_wren, shuffle_start, shuffle_finish;
 	 
-	 shuffle_arr ksa_shuffle (.address(shuffle_addr),
-									  .data(shuffle_data),
-									  .q(s_arr_q),
-									  .wren(shuffle_wren),
-									  .clk(clk),
-									  .rst(reset_n),
-									  .start(shuffle_start),
-									  .secret(24'h0003FF), // Hardcoded secret key for now. --> replace with actual key input
-									  .finish(shuffle_finish));
 									  
 									  
 	 /* TASK 2: Compute one byte per character in the encrypted message: decrypter module in decrypter.sv */
@@ -137,6 +124,15 @@ module ksa
 									  .rst(reset_n),
 									  .start(decrypter_start),
 									  .finish(decrypter_finish));
+									  
+									  
+	 /* TASK 3: Cracking RC-4 Brute Force Checker - Instantiate rc4_cracker module */
+	 rc4_cracker ksa_cracker (.clk(clk),
+									  .reset(reset_n)
+									  .start() // add signal
+									  .finish(), // add signal
+									  .s_arr_q(s_arr_q),
+									  .encrypted_message()); // add signal
 	 
 endmodule
 
