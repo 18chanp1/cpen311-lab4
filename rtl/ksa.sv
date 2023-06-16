@@ -89,50 +89,38 @@ module ksa
 							 .data(result_data),
 							 .wren(result_wren),
 							 .q(result_q));
-	 
-	 
-	 /* TASK 1: Initialize Memory: Instantiate mem_init module in mem_init.sv */
-	 logic [7:0] init_addr, init_data;
-    logic init_wren, init_start, init_finish;
-	 mem_init ksa_mem_init (.address(init_addr),
-									.data(init_data),
-									.wren(init_wren),
-									.q(s_arr_q),
-									.clk(clk),
-									.rst(reset_n),
-									.start(init_start),
-									.finish(init_finish));
-	 
-	 
-	 
 									  
 									  
-	 /* TASK 2: Compute one byte per character in the encrypted message: decrypter module in decrypter.sv */
-	 logic [7:0] decrypter_s_addr, decrypter_s_data, decrypter_s_q;
-    logic decrypter_start, decrypter_finish, decrypter_s_wren;
+	 logic [23:0] current_key;
+	 logic [31:0] encrypted_message;
+	 logic rc4_start, rc4_finish, rc4_failure, rc4_ready;
 	 
-	 decrypter ksa_decrypter (.msg_q(rom_q),
-									  .msg_addr(rom_addr),
-									  .result_addr(result_addr),
-									  .result_data(result_data),
-									  .result_wren(result_wren),
-									  .s_addr(decrypter_s_addr),
-									  .s_data(decrypter_s_data),
-									  .s_q(s_arr_q),
-									  .s_wren(decrypter_s_wren),
-									  .clk(clk),
-									  .rst(reset_n),
-									  .start(decrypter_start),
-									  .finish(decrypter_finish));
-									  
-									  
+	 assign rc4_start = ~KEY[0]; // KEY 0 button press is "start" of decryption
+	 
 	 /* TASK 3: Cracking RC-4 Brute Force Checker - Instantiate rc4_cracker module */
 	 rc4_cracker ksa_cracker (.clk(clk),
-									  .reset(reset_n)
-									  .start() // add signal
-									  .finish(), // add signal
+									  .reset(reset_n),
+									  .rc4_start(rc4_start),
+									  .rc4_finish(rc4_finish), 
+									  .rc4_failure(rc4_failure),
 									  .s_arr_q(s_arr_q),
-									  .encrypted_message()); // add signal
+									  .current_key(current_key),
+									  .encrypted_message(encrypted_message),
+									  .s_arr_addr(s_arr_addr),
+									  .s_arr_data(s_arr_data),
+									  .s_arr_wren(s_arr_wren),
+									  .rc4_ready(rc4_ready));
+		
+		/* Display current key considered in HEX display */
+	assign {hex5in, hex4in, hex3in, hex2in, hex1in, hex0in} = current_key; // Total 24 bits
+	
+	
+	
+	/* Assign LEDR depending on status */
+	assign LEDR[9] = rc4_ready;
+	assign LEDR[0] = rc4_finish;
+	assign LEDR[1] = rc4_failure;
+	
 	 
 endmodule
 
