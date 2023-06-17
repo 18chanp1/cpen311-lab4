@@ -16,7 +16,7 @@ module ksa
     output logic [6:0]  HEX4,
     output logic [6:0]  HEX5
 ); 
-    logic hex0in, hex1in, hex2in, hex3in, hex4in, hex5in;
+    logic [3:0] hex0in, hex1in, hex2in, hex3in, hex4in, hex5in;
     
 	 /* Instantiate Seven Segment Display Decoders for 6 digits*/
 	 
@@ -60,42 +60,15 @@ module ksa
 
     assign clk = CLOCK_50;
     assign reset_n = ~KEY[3]; // Active Low Reset Button on FPGA
-	 
-	 
-	 /* TASK 1: Instantiate on-chip memory: s_memory module */
-	 logic [7:0] s_arr_addr, s_arr_data, s_arr_q;
-    logic s_arr_wren;
-    
-	 s_memory s_arr(.address(s_arr_addr),
-						 .clock(clk),
-						 .data(s_arr_data),
-						 .wren(s_arr_wren),
-						 .q(s_arr_q));
-						 
-	
-	 /* TASK 1: Instantiate ROM: rom module */
-    logic [7:0] rom_addr, rom_q;
-	 
-    msg rom(.clock(clk),
-			   .address(rom_addr),
-			   .q(rom_q));
-						
-						
-	 /* TASK 1: Instantiate output RAM: decrypted module */
-	 logic [7:0] result_addr, result_data, result_q;
-    logic result_wren;
-    decrypted result (.address(result_addr),
-							 .clock(clk),
-							 .data(result_data),
-							 .wren(result_wren),
-							 .q(result_q));
 									  
 									  
 	 logic [23:0] current_key;
-	 logic [31:0] encrypted_message;
 	 logic rc4_start, rc4_finish, rc4_failure, rc4_ready;
 	 
 	 assign rc4_start = ~KEY[0]; // KEY 0 button press is "start" of decryption
+	 
+	 logic read_begin;
+	 assign read_begin = ~KEY[1];
 	 
 	 /* TASK 3: Cracking RC-4 Brute Force Checker - Instantiate rc4_cracker module */
 	 rc4_cracker ksa_cracker (.clk(clk),
@@ -103,12 +76,7 @@ module ksa
 									  .rc4_start(rc4_start),
 									  .rc4_finish(rc4_finish), 
 									  .rc4_failure(rc4_failure),
-									  .s_arr_q(s_arr_q),
 									  .current_key(current_key),
-									  .encrypted_message(encrypted_message),
-									  .s_arr_addr(s_arr_addr),
-									  .s_arr_data(s_arr_data),
-									  .s_arr_wren(s_arr_wren),
 									  .rc4_ready(rc4_ready));
 		
 		/* Display current key considered in HEX display */
@@ -120,7 +88,7 @@ module ksa
 	assign LEDR[9] = rc4_ready;
 	assign LEDR[0] = rc4_finish;
 	assign LEDR[1] = rc4_failure;
-	
+		
 	 
 endmodule
 
