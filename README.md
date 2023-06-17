@@ -13,7 +13,7 @@ All parts complete, including:
 
 ## Annotated Simulation screenshots
 [./docs](./docs)
-They are partitioned by part. Inside, you will find simulation screenshots and signaltap screenshots
+They are partitioned by task. Inside, you will find simulation screenshots and signaltap screenshots
 
 ## Annotated Signaltap screenshots
 See above
