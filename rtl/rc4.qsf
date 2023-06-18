@@ -949,13 +949,11 @@ set_global_assignment -name SYSTEMVERILOG_FILE our_components/task1/mem_init.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ksa.sv
 set_global_assignment -name SDC_FILE timing_constraints.sdc
 set_global_assignment -name QIP_FILE s_memory.qip
-set_global_assignment -name SIGNALTAP_FILE ../stp/part1.stp
 set_global_assignment -name SYSTEMVERILOG_FILE our_components/task2/shuffle_arr.sv
 set_global_assignment -name QIP_FILE msg.qip
 set_global_assignment -name QIP_FILE decrypted.qip
 set_global_assignment -name SYSTEMVERILOG_FILE our_components/task3/rc4_cracker.sv
 set_global_assignment -name CDF_FILE Chain1.cdf
-set_global_assignment -name SIGNALTAP_FILE ../stp/part3.stp
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_clk -to "rc4_cracker:ksa_cracker|clk" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_SEGMENT_SIZE=128" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[18] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
@@ -1002,5 +1000,5 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[26] -
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[27] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[29] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[30] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
-set_global_assignment -name SLD_FILE db/part3_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name SLD_FILE db/part3_auto_stripped.stp
