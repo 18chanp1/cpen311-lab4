@@ -1,0 +1,5 @@
+Message 4: 87B2D - rc four is not very secure (Core 1)
+Message 5: 4000C - you now have solid vhdl skills (Core 1)
+Message 6: 00000 - this one is tricky with zero key (Core 1)
+Message 7: 2640F - vhdl ninja saves the day (Core 1)
+Message 8: 3FFFF - good luck on your exams (Core 4)
