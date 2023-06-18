@@ -7,11 +7,15 @@ module rc4_cracker
 	parameter ADDR_WIDTH = 8,
 	parameter ADDR_MAX = 255,   /*Highest possible address of the pseudorandom sequence.*/
 	parameter SECRET_LEN = 24,  /*Must be multiple of 8, i.e. byte-sized. Length of secret*/
-	parameter MESSAGE_LEN = 32 /* in bytes*/
+	parameter MESSAGE_LEN = 32, /* in bytes*/
+	parameter KEY_START = 0,
+	parameter MAX_KEY = {2'b00, {22{1'b1}}}
 )
 (
 	input logic clk, 
-	input logic reset, 
+	input logic reset,
+	input logic pause, 
+	input logic rc4_stop,
 	input logic rc4_start, 
 	output logic rc4_finish, 
 	output logic rc4_failure,
@@ -27,11 +31,10 @@ module rc4_cracker
 	parameter DECRYPTER 					= 12'b0100_00000100;
 	parameter ASCII_MEM_CHECK			= 12'b0101_10000000;
 	parameter FAILURE 					= 12'b0110_00001000;
-	parameter FINISHED_CURRENT_KEY 	= 12'b0111_01000000;
-	parameter CRACKED						= 12'b1000_00010000;
-	
-	parameter MAX_KEY = {2'b00, {22{1'b1}}}; // we know the 2 most significant bits will be 00
-	
+	parameter FINISHED_CURRENT_KEY 		= 12'b0111_01000000;
+	parameter CRACKED					= 12'b1000_00010000;
+	parameter FOUND_IN_OTHER_CORE 		= 12'b1001_00000000;
+		
 	/* Local Variables */
 	logic [11:0] state; // add width
 	logic reset_fsm;
@@ -134,36 +137,44 @@ module rc4_cracker
 	logic [7:0] memory_check_address, memory_check_data;
 	
 	assign memory_check_start = state[7];
-	
+		
 	ascii_mem_test memory_check (.clk(clk),
 										  .reset(reset_fsm),
 										  .start(memory_check_start),
 										  .finish(memory_check_finish),
 										  .failure(memory_check_failure),
 										  .q(result_q),
-										  .address(ram_address));
+										  .address(memory_check_address));
 	
 	
 	always_ff @(posedge clk, posedge reset) 
 	begin
 		if (reset) begin
+			current_key <= KEY_START;
 			state <= IDLE;
+		end else if (rc4_stop && (state != CRACKED)) begin
+			// Stop Core if rc4_stop is high
+			state <= FOUND_IN_OTHER_CORE; // Other core has found solution
 		end else begin
 			case(state)
 				IDLE: begin // don't think idle is necessary -> remove later
-					current_key <= 24'h249;
+					current_key <= KEY_START;
 					if (rc4_start) state <= INIT_ARRAY; // To avoid incrementing key at start
 					else state <= IDLE; // Wait in idle until start button is pressed initially
 				end
 				
 				// GENERATE_KEY State
 				GENERATE_KEY: begin
-					if (current_key == MAX_KEY) begin
-						current_key = 0; // implement some failure method here
-						state <= FAILURE;
+					if (!pause) begin // If paused, stay in this state.
+						if (current_key == MAX_KEY) begin
+							current_key = 0; // implement some failure method here
+							state <= FAILURE;
+						end else begin
+							current_key = current_key + 1;
+							state <= INIT_ARRAY;
+						end
 					end else begin
-						current_key = current_key + 1;
-						state <= SHUFFLE_ARR;
+						state <= GENERATE_KEY;
 					end
 				end
 				
@@ -181,7 +192,7 @@ module rc4_cracker
 				
 				// DECRYPTER State
 				DECRYPTER: begin
-					if (decrypter_finish) state <= FINISHED_CURRENT_KEY;
+					if (decrypter_finish) state <= ASCII_MEM_CHECK;
 					else state <= DECRYPTER; // Wait for decrypter_finish from decrypter FSM
 				end
 				
@@ -201,7 +212,7 @@ module rc4_cracker
 				// FINISHED_CURRENT_KEY State
 				FINISHED_CURRENT_KEY: begin
 					// First check if we cracked it (ask Paco how), otherwise go back to GENERATE_KEY to try another key
-					state <= FAILURE;
+					state <= GENERATE_KEY;
 				end
 				
 				// CRACKED State
@@ -213,6 +224,11 @@ module rc4_cracker
 				FAILURE: begin
 					state <= FAILURE;
 				end	
+
+				// FOUND_IN_OTHER_CORE State
+				FOUND_IN_OTHER_CORE: begin
+					state <= FOUND_IN_OTHER_CORE;
+				end
 				
 				//DEFAULT 
 				default: state <= IDLE;

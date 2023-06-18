@@ -22,7 +22,7 @@ module ascii_mem_test
 	parameter PREP_READ 	= 5'b001_00;
 	parameter READ			= 5'b010_00;
 	parameter FINISHED 	= 5'b011_01;
-	parameter FAILURE		= 5'b100_10;
+	parameter FAILURE		= 5'b100_11;
 	
 	localparam STATE_TOP = DATA_WIDTH + 2 - 1;
 	
