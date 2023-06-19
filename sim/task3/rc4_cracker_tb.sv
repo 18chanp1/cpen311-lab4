@@ -40,7 +40,7 @@ module rc4_cracker_tb;
 		rc4_start = 1'b1;
 		#10;
 		rc4_start = 1'b0;
-		#200;
+		#200000;
 	
 	
 		$stop;
