@@ -20,10 +20,10 @@ module mem_init
     localparam STATE_TOP = DATA_WIDTH + 2 - 1;
 
     logic [STATE_TOP:0] state;
-    assign address =    state[STATE_TOP:2];
-    assign data =       state[STATE_TOP:2];
-    assign wren =       state[1];
-    assign finish =     state[0];
+    assign address =    state[STATE_TOP:2] /* synthesis keep */;
+    assign data =       state[STATE_TOP:2] /* synthesis keep */;
+    assign wren =       state[1]           /* synthesis keep */;
+    assign finish =     state[0]           /* synthesis keep */;
 
     parameter READY = 2'b00;
     parameter WRITE = 2'b10;

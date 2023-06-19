@@ -35,25 +35,25 @@ module decrypter
 
     logic [S_DATA_T:0] state;
     
-    assign finish =         state[0];
+    assign finish =         state[0]                                    /* synthesis keep */;
     /* RAM write enables */
-    assign result_wren =    state[1];
-    assign s_wren =         state[2];
+    assign result_wren =    state[1]                                    /* synthesis keep */;
+    assign s_wren =         state[2]                                    /* synthesis keep */;
     /*assign state_ID =     state[6:3];*/
     /* variable length params*/
     /* Encrypted message ROM control*/
-    assign msg_addr =       state[MSG_ADDR_T:7];
+    assign msg_addr =       state[MSG_ADDR_T:7]                         /* synthesis keep */;
     /* Decrypted message RAM control*/
-    assign result_addr =    state[RESULT_ADDR_T:MSG_ADDR_T + 1];
-    assign result_data =    state[RESULT_DATA_T:RESULT_ADDR_T + 1];
+    assign result_addr =    state[RESULT_ADDR_T:MSG_ADDR_T + 1]         /* synthesis keep */;
+    assign result_data =    state[RESULT_DATA_T:RESULT_ADDR_T + 1]      /* synthesis keep */;
     /* Scratchpad RAM controls*/
-    assign s_addr =         state[S_ADDR_T:RESULT_DATA_T + 1];
-    assign s_data =         state[S_DATA_T:S_ADDR_T + 1];
+    assign s_addr =         state[S_ADDR_T:RESULT_DATA_T + 1]           /* synthesis keep */;
+    assign s_data =         state[S_DATA_T:S_ADDR_T + 1]                /* synthesis keep */;
 
     /*registers to store variables*/
-    logic[ADDR_WIDTH - 1:0] i, j;
-    logic[DATA_WIDTH - 1:0] si, sj;
-    logic [$clog2(MESSAGE_LEN) - 1 : 0] k;
+    logic[ADDR_WIDTH - 1:0] i, j                                        /* synthesis keep */;
+    logic[DATA_WIDTH - 1:0] si, sj                                      /* synthesis keep */;
+    logic [$clog2(MESSAGE_LEN) - 1 : 0] k                               /* synthesis keep */;
 
     /* State encodings*/
     parameter READY =           7'b0000_000;
