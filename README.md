@@ -11,9 +11,11 @@ All parts complete, including:
 3. Task 3 - FSM to attempt to brute force all possible keys
 4. Bonus - Multi-core initialization
 
+Complete with simulations and SignalTaps
+
 ## Annotated Simulation screenshots
 [./docs](./docs)
-They are partitioned by task. Inside, you will find simulation screenshots and signaltap screenshots.  
+They are partitioned by task. Inside, you will find simulation screenshots and SignalTap screenshots.  
 
 ### Task 1 Simulations
 ![part1.png](./docs/1/modelsim/part1.png)
@@ -31,18 +33,20 @@ They are partitioned by task. Inside, you will find simulation screenshots and s
 
 ![02.png](./docs/2b/modelsim/02.png)
 
-## Annotated Signaltap screenshots
-### Task 1 Signaltap
+## Annotated SignalTap screenshots
+[./docs](./docs)
+They are partitioned by task. Inside, you will find simulation screenshots and SignalTap screenshots. 
+### Task 1 SignalTap
 ![01.png](./docs/1/signaltap/01.png "01.png")
 
 ![02.png](./docs/1/signaltap/02.png "02.png")
 
-## Task 2a Signaltap
+## Task 2a SignalTap
 ![01.png](./docs/2a/signaltap/01.png "01.png")
 
 ![02.png](./docs/2a/signaltap/02.png)
 
-## Task 2b Signaltap
+## Task 2b SignalTap
 ![01.png](./docs/2b/signaltap/01.png)
 
 ![02.png](./docs/2b/signaltap/02.png)
