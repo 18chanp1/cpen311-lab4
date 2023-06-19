@@ -33,6 +33,12 @@ They are partitioned by task. Inside, you will find simulation screenshots and S
 
 ![02.png](./docs/2b/modelsim/02.png)
 
+## Task 3 Simulations
+![01.png](./docs/part3/Simulation Screenshots/01.png)
+![02.png](./docs/part3/Simulation Screenshots/02.png)
+![03.png](./docs/part3/Simulation Screenshots/03.png)
+![04.png](./docs/part3/Simulation Screenshots/04.png)
+
 ## Annotated SignalTap screenshots
 [./docs](./docs)
 They are partitioned by task. Inside, you will find simulation screenshots and SignalTap screenshots. 
@@ -50,5 +56,14 @@ They are partitioned by task. Inside, you will find simulation screenshots and S
 ![01.png](./docs/2b/signaltap/01.png)
 
 ![02.png](./docs/2b/signaltap/02.png)
+
+## Task 3 SignalTap
+![01.png](./docs/part3/SignalTap Screenshots/01.png)
+![02.png](./docs/part3/SignalTap Screenshots/02.png)
+![03.png](./docs/part3/SignalTap Screenshots/03.png)
+![04.png](./docs/part3/SignalTap Screenshots/04.png)
+![05.png](./docs/part3/SignalTap Screenshots/05.png)
+![06.png](./docs/part3/SignalTap Screenshots/06.png)
+
 ## Additional Information
 None
