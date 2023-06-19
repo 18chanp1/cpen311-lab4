@@ -29,14 +29,14 @@ module shuffle_arr
     localparam SECRET_BYTE_LEN = SECRET_LEN >> 3;
 
     logic [DATA_TOP:0] state;
-    logic [ADDR_WIDTH - 1:0] i, j;
-    logic [DATA_WIDTH - 1:0] si;
+    logic [ADDR_WIDTH - 1:0] i, j                   /* synthesis keep */;
+    logic [DATA_WIDTH - 1:0] si                     /* synthesis keep */;
 
-    assign finish =     state[0];
-    assign wren =       state[1];
+    assign finish =     state[0]                    /* synthesis keep */;
+    assign wren =       state[1]                    /* synthesis keep */;
     /*state ID =        state[4:2]*/
-    assign address =    state[ADDR_TOP:5];
-    assign data =       state[DATA_TOP:ADDR_TOP + 1];
+    assign address =    state[ADDR_TOP:5]           /* synthesis keep */;
+    assign data =       state[DATA_TOP:ADDR_TOP + 1]/* synthesis keep */;
 
     parameter READY =           5'b000_00;
     parameter GET_SI =          5'b001_00;
